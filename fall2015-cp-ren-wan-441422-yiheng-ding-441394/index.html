@@ -1,0 +1,848 @@
+<!doctype html>
+<html>
+  <head>
+    <title>EZ Paint</title>
+    <style type="text/css">
+    body{
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #canvas{
+      /*border: solid 1px #000000;*/
+      float: left;
+      outline:1px solid #000000;
+    }
+
+    .top-bar{
+      /*height: 50px;*/
+      width: 100%;
+      /*background: yellow;*/
+
+    }
+
+    .state-bar{
+      font-size: 30px;
+      text-align: center;
+    }
+    .left-panel{
+      background: #00ffff;
+      width: 200px;
+      height: 500px;
+      float:left;
+      position: relative;
+    }
+    .player{
+      height: 50px;
+      border-bottom: solid 1px #000000;
+      border-right: solid 10px #999999;
+
+    }
+
+
+    .me{
+      border-right: solid 10px blue;
+    }
+
+    .now{
+      background: yellow;
+    }
+
+    .player-name{
+      font-weight: bold;
+    }
+
+    .player-point{
+      font-size: 14px;
+      color: blue;
+    }
+
+
+    .chat-log{
+      background: #999999;
+      position: absolute;
+      bottom: 30px;
+      height: 100px;
+      width: 200px;
+      overflow: auto;
+
+    }
+
+
+    .chat-log .msg{
+      padding: 0 2px;
+      border-bottom: solid 1px #000000;
+      margin-bottom: 2px;
+    }
+
+    .chat-log .msg-sender{
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .chat-log .msg-content{
+      font-size: 20px;
+    }
+
+    .chat{
+      position: absolute;
+      bottom: 0px;
+      height: 30px;
+      line-height: 30px;
+      width: 200px;
+      text-align: center;
+
+    }
+    
+
+    .panel-body{
+      text-align: center;
+    }
+    
+    .size{
+      width: 40px;
+      height: 40px;
+      border: solid 1px #000000;
+      text-align: center;
+      border-radius: 5px;
+      display: inline-block;
+      position: relative;
+      margin: 5px;
+    }
+
+    .size .size-block{
+      background: #000000;
+      border-radius: 50%;
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #size-20{
+      height: 20px;
+      width: 20px;
+    }
+    #size-15{
+      height: 15px;
+      width: 15px;
+    }
+    #size-10{
+      height: 10px;
+      width: 10px;
+    }
+    #size-5{
+      height: 5px;
+      width: 5px;
+    }
+
+    .color{
+      float: left;
+    }
+
+
+    .color-block{
+      display: inline-block;
+      height: 25px;
+      width: 25px;
+      margin: 5px;
+      border: solid 1px black; 
+    }
+
+    #color-black{ background: black; }
+    #color-white{ background: white; }
+    #color-grey{ background: grey; }
+    #color-red{ background: red; }
+    #color-green{ background: green; }
+    #color-yellow{ background: yellow; }
+    #color-blue{ background: blue; }
+    #color-orange{ background: orange; }
+    #color-cyan{ background: cyan; }
+    #color-purple{ background: purple; }
+
+    .panel-area{
+      height: 500px;
+      width: 120px;
+      float: left;
+    }
+    .panel-heading{
+      font-size: 20px;
+      font-weight: bold;
+      background: grey;
+      text-align: center;
+      margin-bottom: 5px;
+
+    }
+
+    .panel-area::after{
+      clear: both;
+    }
+    
+    .panel{
+      margin-bottom: 10px;
+    }
+
+    
+    #timerbar {
+      width: 600px;
+      height: 10px;
+      margin: 0;
+      padding: 0;
+      border-radius: 0px;
+      background: #cccccc;
+      border: none;
+      width: 100%;
+    }
+    #timerbar::-webkit-progress-bar {
+      width: 600px;
+      height: 10px;
+      margin: 0;
+      padding: 0;
+      border-radius: 0px;
+      background: #cccccc;
+      width: 100%;
+    }
+    #timerbar::-webkit-progress-value {
+      background: #14BDF5;
+    }
+    #timerbar::-moz-progress-bar {
+      background: #14BDF5;
+    }
+    
+
+    </style>
+  </head>
+  <body ng-app="ezpaint" ng-controller="myCtrl">
+    
+    <div class="top-bar"> 
+      <progress id="timerbar" value="300" max="300"></progress>
+      <div class="state-bar">{{gameState}}</div>
+      <button ng-click="startGame()" ng-if="false || !isGameStart" >Start Game</button>
+      <!-- <button ng-click="nextTurn()">Next Turn</button> -->
+    </div>
+
+    
+    <br>
+    <br>
+    <div class="left-panel"> 
+      <div class="player-list">
+        <div class="player" ng-class="{'me': key==mySocketId, 'now': key==nowPlayerId }" ng-repeat="(key,player) in players">
+          <div class="player-name">{{player.name}}</div>
+          <div class="player-point">{{player.point}}</div>
+        </div>
+      </div>
+
+      <div class="chat-log">
+        <div class="msg" ng-repeat="msg in msgs">
+          <div class="msg-sender">{{msg.sender}}</div>
+          <div class="msg-content">{{msg.content}}</div>
+        </div>
+      </div>
+
+      <div class="chat">
+        <input type="text" ng-model="answerStr" placeholder="Answer or chat..."/>
+        <button ng-click="answer()">Send</button>
+      </div>
+    </div>
+    
+    
+    <canvas id="canvas" width="600" height="500" ng-mousedown="canvasMouseDown($event)" ng-mousemove="canvasMouseMove($event)" ng-mouseup="canvasMouseUp($event)" ng-mouseleave="canvasMouseLeave($event)" ng-model="canvas" ></canvas>
+
+
+    <div class="panel-area">
+    <!--
+      <div class="brush-panel panel">
+        <div class="panel-heading">Brush</div>
+        <div class="panel-body">
+          <div class="brush">
+            <button>Brush</button>
+          </div>
+          <div class="brush">
+            <button>Pencil</button>
+          </div>
+          <div class="brush">
+            <button>Eraser</button>
+          </div>
+        </div>
+      </div>
+      -->
+      <div class="panel">
+        <div class="panel-heading">Tool</div>
+        <div class="panel-body">
+          <button ng-click="clear()">Clear</button>
+        </div>
+      </div>
+
+
+      <div class="size-panel panel">
+        <div class="panel-heading">Size</div>
+        <div class="panel-body">
+          <div class="size" ng-repeat="size in sizes" ng-click="chooseSize(size)">
+            <div id="size-{{size}}" class="size-block"  ></div>
+          </div>
+          <!-- <div class="size">
+            <div id="size-15" class="size-block" ></div>
+          </div>
+          <div class="size">
+            <div id="size-10" class="size-block" ></div>
+          </div>
+          <div class="size">
+            <div id="size-5" class="size-block" ></div>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="color-panel panel">
+        <div class="panel-heading">Color</div>
+        <div class="panel-body">
+          <div class="color" ng-repeat="color in colors" ng-click="chooseColor(color)">
+            <div id="color-{{color}}" class="color-block" ></div>
+          </div>
+          <!-- <div class="color">
+            <div id="color-white" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-grey" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-red" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-green" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-yellow" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-blue" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-orange" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-cyan" class="color-block" ></div>
+          </div>
+          <div class="color">
+            <div id="color-purple" class="color-block" ></div>
+          </div> -->
+        </div>
+      </div>
+
+      
+
+
+
+    </div>
+
+
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.11.1.js"></script> -->
+    <script>
+      // var socket = io();
+      // $('form').submit(function(){
+      //   socket.emit('chat message', $('#m').val());
+      //   $('#m').val('');
+      //   return false;
+      // });
+      // socket.on('chat message', function(msg){
+      //   $('#messages').append($('<li>').text(msg));
+      // });
+    </script>
+
+    <script type="text/javascript">
+
+        // util
+
+        function findAndRemove(array, property, value) {
+          array.forEach(function(result, index) {
+            if(result[property] === value) {
+              //Remove from array
+              array.splice(index, 1);
+            }    
+          });
+        }
+
+        function checkExist(array, property, value) {
+          array.forEach(function(result, index) {
+            if(result[property] === value) {
+              return true;
+            }    
+          });
+          return false;
+        }
+
+
+        function offset(elm) {
+          try {return elm.offset();} catch(e) {}
+          var rawDom = elm; //[0];
+          var _x = 0;
+          var _y = 0;
+          var body = document.documentElement || document.body;
+          var scrollX = window.pageXOffset || body.scrollLeft;
+          var scrollY = window.pageYOffset || body.scrollTop;
+          _x = rawDom.getBoundingClientRect().left + scrollX;
+          _y = rawDom.getBoundingClientRect().top + scrollY;
+          return { left: _x, top: _y };
+        }
+
+
+        // var mySocketId;
+
+
+        //end util
+
+        var TIME_PER_TURN = 60;
+
+        var clickX = new Array();
+        var clickY = new Array();
+        var clickDrag = new Array();
+
+        var curColor = "#000000";
+        var clickColor = new Array();
+        var curTool = "marker";
+        var clickTool = new Array();
+        var clickSize = new Array();
+        var curSize = 10;
+        var paint;
+
+        var isMyTurn = false;
+        var curTime = 300;
+
+
+
+
+
+        myCanvas = document.getElementById('canvas');
+        context = myCanvas.getContext("2d");
+
+        var myTimer;
+
+
+        var socket = io();
+
+
+        var app = angular.module('ezpaint', []);
+
+
+
+        function addClick(x, y, dragging)
+        {
+          var tempColor = curColor;
+          if(curTool == "eraser"){
+            tempColor = "white";
+          }
+          var drawData = {"x": x, "y": y, "dragging": dragging, "color": tempColor, "size": curSize, "tool": curTool};
+          console.log(drawData);
+          socket.emit('draw', drawData);
+        }
+
+        // function addClick(x, y, dragging)
+        // {
+        //   clickX.push(x);
+        //   clickY.push(y);
+        //   clickDrag.push(dragging);
+        //   if(curTool == "eraser"){
+        //     clickColor.push("white");
+        //   }else{
+        //     clickColor.push(curColor);
+        //   }
+        //   clickColor.push(curColor);
+        //   clickSize.push(curSize);
+        // }
+
+        function redraw(){
+          context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+          context.lineJoin = "round";
+          // console.log(clickColor);
+          for(var i=0; i < clickX.length; i++)
+          {   
+            context.beginPath();
+            if(clickDrag[i] && i){
+              context.moveTo(clickX[i-1], clickY[i-1]);
+            }else{
+              context.moveTo(clickX[i]-1, clickY[i]);
+            }
+            context.lineTo(clickX[i], clickY[i]);
+            context.closePath();
+            context.strokeStyle = clickColor[i];
+            context.lineWidth = clickSize[i];
+            context.lineJoin = "round";
+            context.stroke();
+          }
+        }
+
+        function emptyArray(){
+          // alert('emptyArray');
+          clickX = [];
+          clickY = [];
+          clickDrag = [];
+
+          curColor = "#000000";
+          clickColor = [];
+          curTool = "marker";
+          clickTool = [];
+          clickSize = [];
+          curSize = 10;
+
+          // alert(clickX);
+          redraw();
+        }
+
+
+        function initTimer() {
+
+          document.getElementById('timerbar').value = curTime;
+          curTime --;
+          if(curTime<=0){
+            clearInterval(myTimer);
+          }
+          // var t = setTimeout(setTimer, curTime);
+
+        }
+
+
+
+
+
+
+        app.controller('myCtrl', function($scope) {
+            $scope.isGameStart = false;
+            $scope.gameState = "Waiting";
+            $scope.mySocketId = '';
+            $scope.nowPlayerId = '';
+            $scope.sizes = [20, 15, 10, 5];
+            $scope.msgs = [];
+            $scope.colors = ['black', 'white', 'grey', 'red', 'green', 'blue', 'orange', 'cyan', 'yellow', 'purple'];
+            // $scope.players = [{"socketid":"123123","name": "Wanren", "point": "10"}];
+            $scope.players = {};
+            socket.on('connected', function(playerObj){
+              if($scope.mySocketId == ''){
+                $scope.mySocketId = playerObj['id'];
+              }
+            });
+
+            socket.on('getplayers', function(players){
+              for(socketid in players){
+                player = players[socketid]
+                $scope.players[socketid] = player;
+              }
+              $scope.$apply();
+            });
+
+
+            $scope.func = function(){
+                // alert(123);
+                $scope.strs.push('ooo');
+
+            };
+
+            $scope.answer = function(){
+                // alert(123);
+                // alert($scope.answerStr);
+                socket.emit('answer', $scope.answerStr);
+
+            };
+
+            $scope.startGame = function(){
+              socket.emit('startgame', '');
+              // socket.emit('nextturn', '');
+            };
+
+            $scope.nextTurn = function(){
+                // socket.emit('nextturn', '');
+            };
+
+            $scope.clear = function(){
+              if(isMyTurn){
+                socket.emit('clear', '');
+              }
+            }
+
+            $scope.canvasMouseDown = function(event){
+              if(isMyTurn){
+                var mouseX = event.pageX - offset(myCanvas).left;
+                var mouseY = event.pageY - offset(myCanvas).top;
+                      
+                paint = true;
+                addClick(mouseX, mouseY);
+              }
+              // redraw();
+            };
+
+            $scope.canvasMouseMove = function(event){
+
+              if(paint && isMyTurn){
+                var mouseX = event.pageX - offset(myCanvas).left;
+                var mouseY = event.pageY - offset(myCanvas).top;
+
+                addClick(mouseX, mouseY, true);
+                // redraw();
+              }
+            };
+
+            $scope.canvasMouseUp = function(event){
+              if(isMyTurn){
+                paint = false;
+              }
+            };
+
+            $scope.canvasMouseLeave = function(event){
+              if(isMyTurn){
+                paint = false;
+              }
+            };
+            $scope.chooseColor = function(color){
+              if(isMyTurn){
+                curColor = color;
+              }
+            };
+            $scope.chooseSize = function(size){
+              if(isMyTurn){
+                curSize = size;
+              }
+            };
+
+
+        // $('#canvas').mousedown(function(e){
+        //     // alert(123);
+        //   var mouseX = e.pageX - this.offsetLeft;
+        //   var mouseY = e.pageY - this.offsetTop;
+                
+        //   paint = true;
+        //   addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+        //   redraw();
+        //   // drawDup();
+        // });
+
+        // $('#canvas').mousemove(function(e){
+        //   if(paint){
+        //     addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+        //     redraw();
+        //     // drawDup();
+        //   }
+        // });
+
+        // $('#canvas').mouseup(function(e){
+        //   paint = false;
+        // });
+
+        // $('#canvas').mouseleave(function(e){
+        //   paint = false;
+        // });
+
+
+
+
+
+
+            socket.on('connected', function(playerObj){
+              var pid = playerObj['id']
+              // var key = playerObj[0];
+              $scope.players[pid] = playerObj['player'];
+              $scope.$apply();
+            });
+
+            socket.on('disconnected', function(socketid){
+              // findAndRemove($scope.players, 'socketid', socketid);
+              delete $scope.players[socketid];
+              $scope.$apply();
+            });
+
+            socket.on('clear', function(){
+              // findAndRemove($scope.players, 'socketid', socketid);
+              emptyArray();
+            });
+
+            socket.on('getquestion', function(question){
+              $scope.gameState = 'Your turn. '+ question;
+              isMyTurn = true;
+              $scope.$apply();
+            });
+
+            socket.on('correctanswer', function(){
+              // alert('correctanswer');
+            });
+
+            socket.on('nextturn', function(playerObj){
+              $scope.nowPlayerId = playerObj['id'];
+              var name = playerObj['name'];
+              isMyTurn = false;
+              clearInterval(myTimer);
+              emptyArray();
+              redraw();
+              curTime = 300;
+              myTimer = setInterval(initTimer, 200);
+              $scope.gameState = name+ "'s turn.";
+              $scope.$apply();
+            });
+
+            socket.on('startgame', function(){
+              $scope.gameState = "Started";
+              $scope.isGameStart = true;
+              $scope.$apply();
+            });
+
+            socket.on('gamefinish', function(winner){
+              clearInterval(myTimer);
+              isMyTurn = false;
+              $scope.gameState = "Game Finished. Winner is "+winner;
+              $scope.$apply();
+            });
+
+            
+
+
+            socket.on('updatepoint', function(pointObj){
+              // alert('updatepoint');
+              var pid = pointObj['pid']
+              var point = pointObj['point'];
+              var oPoint = parseInt($scope.players[pid].point);
+              $scope.players[pid].point = oPoint + parseInt(point);
+              $scope.$apply();
+            });
+
+
+            socket.on('answer', function(answerObj){
+              console.log(answerObj);
+              var socketid = answerObj['pid'];
+              // alert(socketid);
+              console.log($scope.players);
+              var player = $scope.players[socketid];
+              var content = answerObj['content'];
+              // alert(player.name + ' said:'+content);
+              var msg = {'sender':player.name, 'content':content};
+              console.log(msg);
+              $scope.msgs.push(msg);
+              console.log($scope.msgs);
+              $scope.$apply();
+            });
+
+
+            socket.on('draw', function(d){
+              // console.log(d);
+              clickX.push(d.x);
+              clickY.push(d.y);
+              clickDrag.push(d.dragging);
+              clickColor.push(d.color);
+              clickSize.push(d.size);
+              clickTool.push(d.tool);
+              redraw();
+            });
+
+        });
+
+        
+
+        
+
+
+        /*
+
+        var socket = io();
+
+        context = document.getElementById('canvas').getContext("2d");
+        // contextDup = document.getElementById('canvas2').getContext("2d");
+
+        var clickX = new Array();
+        var clickY = new Array();
+        var clickDrag = new Array();
+        var paint;
+
+        function addClick(x, y, dragging)
+        {
+          
+
+          var drawData = {"x":x, "y":y, "dragging": dragging};
+
+          // console.log('1dd'+drawData);
+          // console.log(socket);
+
+          socket.emit('draw', drawData);
+        }
+
+
+
+        socket.on('draw', function(d){
+          // console.log(d);
+          clickX.push(d.x);
+          clickY.push(d.y);
+          clickDrag.push(d.dragging);
+          redraw();
+        });
+
+        function redraw(){
+          context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+          
+          context.strokeStyle = "#df4b26";
+          context.lineJoin = "round";
+          context.lineWidth = 5;
+                    
+          for(var i=0; i < clickX.length; i++) {        
+            context.beginPath();
+            if(clickDrag[i] && i){
+              context.moveTo(clickX[i-1], clickY[i-1]);
+             }else{
+               context.moveTo(clickX[i]-1, clickY[i]);
+             }
+             context.lineTo(clickX[i], clickY[i]);
+             context.closePath();
+             context.stroke();
+          }
+        }
+
+
+        function drawDup(){
+          contextDup.clearRect(0, 0, contextDup.canvas.width, contextDup.canvas.height); // Clears the canvas
+          
+          contextDup.strokeStyle = "#df4b26";
+          contextDup.lineJoin = "round";
+          contextDup.lineWidth = 5;
+                    
+          for(var i=0; i < clickX.length; i++) {        
+            contextDup.beginPath();
+            if(clickDrag[i] && i){
+              contextDup.moveTo(clickX[i-1], clickY[i-1]);
+             }else{
+               contextDup.moveTo(clickX[i]-1, clickY[i]);
+             }
+             contextDup.lineTo(clickX[i], clickY[i]);
+             contextDup.closePath();
+             contextDup.stroke();
+          }
+        }
+
+        
+        $('#canvas').mousedown(function(e){
+            // alert(123);
+          var mouseX = e.pageX - this.offsetLeft;
+          var mouseY = e.pageY - this.offsetTop;
+                
+          paint = true;
+          addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+          redraw();
+          // drawDup();
+        });
+
+        $('#canvas').mousemove(function(e){
+          if(paint){
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            redraw();
+            // drawDup();
+          }
+        });
+
+        $('#canvas').mouseup(function(e){
+          paint = false;
+        });
+
+        $('#canvas').mouseleave(function(e){
+          paint = false;
+        });
+
+        */
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		
+		
+
+
+		<style type="text/css">
+			h1 {
+			    text-align: center;
+			}
+		</style>
+		<title>Rate Your Coffee</title>
+	</head>
+	<body>
+		<h1>Rate Your Coffee</h1>	
+		<p>Input the coffee</p>
+		<form action="coffee-result.php" method="POST">
+		<label>Input coffee: <input type="text" name="coffee"/></label>
+		<input type="submit" name = "submit_coffee" value="submit"/>
+		</form>
+
+		<p>Input the user, coffee name and rating</p>
+
+		<form action="coffee-back-end.php" method="POST" id= "f">
+		<label>user: <input type="text" name="user"/></label>
+		<label>coffee: <input type="text" name="coffee"/></label>
+		<label>1<input type = "radio" name = "userRating" value = "1" checked></label>
+		<label>2<input type = "radio" name = "userRating" value = "2"></label>
+		<label>3<input type = "radio" name = "userRating" value = "3"></label>
+		<label>4<input type = "radio" name = "userRating" value = "4"></label>
+		<label>5<input type = "radio" name = "userRating" value = "5"></label>
+		<BR/>
+		<input type="submit" name = "submit_rating" value="submit"/>
+		</form>
+		<label>Your comments<textarea rows="4" cols="50" name = "comments" form = "f"></textarea></label>
+
+
+	</body>	
+</html>

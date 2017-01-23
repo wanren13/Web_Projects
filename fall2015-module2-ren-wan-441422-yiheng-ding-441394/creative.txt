@@ -1,0 +1,11 @@
+Students:
+Ren Wan 441422
+Yiheng Ding 441394
+
+link:
+http://ec2-52-26-60-242.us-west-2.compute.amazonaws.com/~wa/m2/login.php
+
+What we have done:
+User friendly page
+User is able to create a new account
+
