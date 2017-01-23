@@ -1,0 +1,27 @@
+cardinals-1943.txt
+
+Stan Musial         :   0.357
+Walker Cooper       :   0.318
+Harry Walker        :   0.294
+Frank Demaree       :   0.291
+Whitey Kurowski     :   0.287
+Lou Klein           :   0.286
+Ray Sanders         :   0.282
+Al Brazle           :   0.281
+Marty Marion        :   0.280
+Danny Litwhiler     :   0.279
+Murry Dickson       :   0.258
+Debs Garms          :   0.257
+George Fallon       :   0.231
+Johnny Hopp         :   0.224
+Ernie White         :   0.214
+Jimmy Brown         :   0.182
+Harry Brecheen      :   0.179
+Howie Krist         :   0.172
+Mort Cooper         :   0.170
+Max Lanier          :   0.164
+Howie Pollet        :   0.163
+Red Munger          :   0.160
+Harry Gumbert       :   0.156
+Buster Adams        :   0.091
+Coaker Triplett     :   0.040

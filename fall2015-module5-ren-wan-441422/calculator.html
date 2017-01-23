@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+        html {
+            display: table;
+            margin: auto;
+        }
+        td.num {
+            width: 50px;
+        }
+        td.op {
+            width: 150px;
+            text-align: center;
+        }
+        /*
+        td.msg {
+        }
+        */
+        legend {
+            font-size: 24pt;
+            font-weight: bold;
+            text-align: center;
+        }
+        </style>
+        <title>JS Calculator</title>
+    </head>
+    <body>
+        <fieldset style = "width:500px">
+        <legend>Calculator</legend>
+        <table id = "calculator">
+            <tr>                
+                <th>First Number</th>
+                <th></th>
+                <th>Second Number</th>
+            </tr>
+            <tr>
+                <td class = "num">
+                    <input type = "text" value = "" class = "listened" id = "num1">        
+                </td>
+                <td class = "op" id = "op">
+                    <input type = "radio" name = "options" value = "+" checked class = "listened">+
+                    <input type = "radio" name = "options" value = "-" class = "listened">-
+                    <input type = "radio" name = "options" value = "*" class = "listened">*
+                    <input type = "radio" name = "options" value = "/" class = "listened">/
+                </td>
+                <td class = "num">
+                    <input type = "text" value = "" class = "listened" id = "num2">
+                </td>
+            </tr>                   
+            <tr>
+                <td colspan = "3">
+                    <span id = "result"></span>
+                </td>
+            </tr>
+        </table>
+        </fieldset>
+        <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Strict" height="31" width="88"></a></p>
+
+        <script type="text/javascript">
+
+        function printResult(){
+            var num1 = document.getElementById("num1").value;
+            var num2 = document.getElementById("num2").value;
+            var options = document.getElementsByName("options");
+            var op = "";
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].checked){
+                    op = options[i].value;
+                }
+            }
+
+            if (!num1.trim() || !num2.trim()){
+                document.getElementById("result").innerHTML = "";
+                return;
+            }
+
+            if(isNaN(num1) || isNaN(num2)) {
+                if(isNaN(num1)) {
+                    document.getElementById("result").innerHTML = "<p>First Number is not a number.</p>";
+                }
+
+                if(isNaN(num2)) {
+                    document.getElementById("result").innerHTML = "<p>Second Number is not a number.</p>";
+                }
+
+                if(isNaN(num1) && isNaN(num2)) {
+                    document.getElementById("result").innerHTML = "<p>First Number and Second Number are not numbers.</p>";
+                }
+
+                return;
+            }
+
+            var n1 = parseFloat(num1);
+            var n2 = parseFloat(num2);
+            var res = 0;
+
+            if(n2 == 0 && op == "/") {
+                document.getElementById("result").innerHTML = "<p>Denominator cannot be 0.</p>";
+                return;
+            }
+
+            switch (op) {
+                case "+":
+                    res = n1 + n2;
+                    break;
+                case "-":
+                    res = n1 - n2;
+                    break;
+                case "*":
+                    res = n1 * n2;
+                    break;
+                case "/":
+                    res = n1 / n2;
+                    break;
+                default:
+                    res = "NA";
+            }
+
+            document.getElementById("result").innerHTML = "<p>" + res.toString() + "</p>";
+        }
+        
+        var targets = document.getElementsByClassName("listened");
+       
+        for ( var i = 0; i < targets.length; ++i ) {
+            element = targets[i];
+            if(element.type == 'text'){
+                // element.addEventListener('keyup', printResult, false);
+
+                element.addEventListener('change', printResult, false);
+            }
+            if(element.type == 'radio'){
+                element.addEventListener('click', printResult, false);
+            }
+        }
+        </script>
+    </body> 
+</html>

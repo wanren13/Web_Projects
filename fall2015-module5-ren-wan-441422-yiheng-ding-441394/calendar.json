@@ -1,0 +1,86 @@
+{
+    "2015-09-15": [
+        {
+            "title": "CSE330 Discussion",
+            "time": "11:30"
+        },
+        {
+            "title": "Dinner with Fred",
+            "time": "18:40"
+        }
+    ],
+    "2015-09-21": [
+        {
+            "title": "Room Escape",
+            "time": "13:00"
+        }
+    ],
+    "2015-09-24": [
+        {
+            "title": "Pick up David",
+            "time": "09:30"
+        },
+        {
+            "title": "Microsoft Interview",
+            "time": "14:30"
+        }
+    ],
+    "2015-10-02": [
+        {
+            "title": "CSE330 Discussion",
+            "time": "11:30"
+        },
+        {
+            "title": "Dinner with Fred",
+            "time": "18:40"
+        }
+    ],
+    "2015-10-08": [
+        {
+            "title": "Room Escape",
+            "time": "13:00"
+        }
+    ],
+    "2015-10-14": [
+        {
+            "title": "Pick up David",
+            "time": "09:30"
+        },
+        {
+            "title": "Microsoft Interview",
+            "time": "14:30"
+        }
+    ],
+    "2015-10-21": [
+        {
+            "title": "Go Swimming",
+            "time": "12:30"
+        }
+    ],
+    "2015-10-25": [
+        {
+            "title": "Go to IKEA",
+            "time": "11:30"
+        },
+        {
+            "title": "Watch Cardinal",
+            "time": "18:40"
+        }
+    ],
+    "2015-11-08": [
+        {
+            "title": "Room Escape",
+            "time": "13:00"
+        }
+    ],
+    "2015-12-14": [
+        {
+            "title": "Pick up David",
+            "time": "09:30"
+        },
+        {
+            "title": "Microsoft Interview",
+            "time": "14:30"
+        }
+    ]
+}

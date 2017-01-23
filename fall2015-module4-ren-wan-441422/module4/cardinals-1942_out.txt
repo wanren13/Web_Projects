@@ -1,0 +1,26 @@
+cardinals-1942.txt
+
+Lon Warneke         :   0.333
+Enos Slaughter      :   0.318
+Stan Musial         :   0.315
+Harry Walker        :   0.313
+Terry Moore         :   0.288
+Walker Cooper       :   0.281
+Coaker Triplett     :   0.278
+Marty Marion        :   0.276
+Johnny Hopp         :   0.260
+Whitey Kurowski     :   0.258
+Jimmy Brown         :   0.256
+Max Lanier          :   0.255
+Ray Sanders         :   0.252
+Creepy Crespi       :   0.243
+Howie Pollet        :   0.233
+Ernie White         :   0.195
+Murry Dickson       :   0.194
+Erv Dusak           :   0.185
+Mort Cooper         :   0.184
+Howie Krist         :   0.172
+Johnny Beazley      :   0.139
+Harry Gumbert       :   0.111
+Gus Mancuso         :   0.077
+Buddy Blattner      :   0.045

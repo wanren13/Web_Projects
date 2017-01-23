@@ -1,0 +1,13 @@
+Yiheng Ding 441394
+Ren Wan     441422
+
+http://ec2-52-26-60-242.us-west-2.compute.amazonaws.com/~wa/m3/index.php
+
+1. Update user picture
+2. Change user password
+3. Censor sensitive keyword
+4. Trigger in mysql (Comments will be deleted when corresponding shory is deleted)
+
+log in details:
+user: dingding
+password: 1234

@@ -1,0 +1,10 @@
+1.
+SELECT * FROM grades;
+2.
+SELECT * FROM courses WHERE school_code = 'L';
+3.
+SELECT s.first_name, s.last_name, s.id, g.grade FROM students as s, grades as g WHERE g.student_id = s.id AND g.course_code = '330S';
+4.
+SELECT s.first_name, s.last_name, s.email_address, ROUND(AVG(g.grade),2) as avg_grade FROM students as s, grades as g WHERE s.id = g.student_id GROUP BY s.id HAVING AVG(g.grade) < 50; 
+5.
+SELECT s.id, s.email_address, AVG(g.grade) as average_grade FROM students as s, grades as g WHERE s.id = g.student_id AND s.first_name = 'Jack' AND s.last_name = 'Johnson' GROUP BY s.id;

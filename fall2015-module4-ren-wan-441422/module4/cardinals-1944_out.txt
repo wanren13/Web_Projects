@@ -1,0 +1,25 @@
+cardinals-1944.txt
+
+Stan Musial         :   0.347
+Johnny Hopp         :   0.336
+Walker Cooper       :   0.317
+Ray Sanders         :   0.295
+Augie Bergamo       :   0.284
+Pepper Martin       :   0.279
+Whitey Kurowski     :   0.270
+Marty Marion        :   0.267
+Danny Litwhiler     :   0.264
+Emil Verban         :   0.257
+Freddy Schmidt      :   0.233
+Debs Garms          :   0.199
+Mort Cooper         :   0.198
+George Fallon       :   0.193
+John Antonelli      :   0.190
+Harry Gumbert       :   0.190
+Max Lanier          :   0.182
+Al Jurisich         :   0.178
+Bud Byerly          :   0.167
+Harry Brecheen      :   0.162
+Ted Wilks           :   0.141
+Red Munger          :   0.125
+Blix Donnelly       :   0.000
