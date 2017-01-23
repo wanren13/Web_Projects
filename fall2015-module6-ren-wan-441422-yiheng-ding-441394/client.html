@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ChatRoom</title>
+	<style>
+	#body{
+		width: 1000px;
+	}
+	#personal{
+		border-radius: 8px;
+		width: 1000px;
+		height: 50px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: #1abc9c;
+	}
+	#name_input{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		left: 40px;
+		border-radius: 8px;
+	}
+	#room_name{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 260px;
+		border-radius: 8px;	
+	}
+	#room_password{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 100px;
+		border-radius: 8px;	
+	}
+	#create_room{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 40px;
+	}
+	#wrapper_table{
+		margin-top: 5px;
+		width: 1000px;
+		height: 700px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	#public_wrapper{
+		border-radius: 8px;
+		width: 588px;
+		height: 300px;
+		border: 2px solid #D8D8D8;
+	}
+	#private_wrapper{
+		border-radius: 8px;
+		width: 588px;
+		height: 300px;
+		margin-top: 15px;
+		border: 2px solid #D8D8D8;
+	}
+	#users_wrapper{
+		border-radius: 8px;
+		margin-left: 7px;
+		width: 190px;
+		height: 622px;
+		border: 2px solid #D8D8D8;
+	}
+	#rooms_wrapper{
+		border-radius: 8px;
+		margin-left: 7px;
+		width: 190px;
+		height: 622px;
+		border: 2px solid #D8D8D8;
+	}
+	.title_wrapper{
+		border-radius: 8px;
+		margin-top: 2px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: #E8E8E8;
+		width: 80%;
+		height: 20px;
+		text-align: center;
+		background-color: #B7EEE4;
+	}
+	.chat_log{
+		border-radius: 8px;
+		margin-top: 5px;
+		margin-bottom: 10px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 94%;
+		height: 236px;
+		overflow: hidden;
+	}
+	#public_chat_log{
+		width: 100%;
+		height: 100%;
+		border-radius: 8px;
+		padding-right: 15px;
+		overflow: auto;
+	}
+	#private_chat_log{
+		width: 100%;
+		height: 100%;
+		border-radius: 8px;
+		padding-right: 15px;
+		overflow: auto;
+	}
+	.chat_log:hover{
+		background-color: #F8F8F8;
+	}
+	.chat_input{
+		margin-bottom: 10px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 84%;
+		height: 20px;
+	}
+	#public_input_field{
+		border-radius: 5px;
+		width: 87%;
+	}
+	#private_input_field{
+		border-radius: 5px;
+		width: 87%;
+	}
+	.entry{
+		font-weight: bold;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 90%;
+		height: 580px;
+		overflow: hidden;
+	}
+	#users_entry{
+		width: 100%;
+		height: 100%;
+		border-radius: 8px;
+		padding-right: 15px;
+		overflow: auto;
+	}
+	#rooms_entry{
+		width: 100%;
+		height: 100%;
+		border-radius: 8px;
+		padding-right: 15px;
+		overflow: auto;
+	}
+	hr {
+	    border: 0;
+	    height: 1px;
+	    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	}
+	.style-2 input[type="text"] {
+		border: solid 2px #c9c9c9;
+		-webkit-transition: border 0.3s;
+		-moz-transition: border 0.3s;
+		-o-transition: border 0.3s;
+		transition: border 0.3s;
+	}
+	.style-2 input[type="text"]:focus, .style-2 input[type="text"].focus {
+		border: solid 2px #969696;
+	}
+	.cell{
+		border-radius: 8px;
+		text-align: center;
+	}
+	.cell:hover{
+		background-color: #F8F8F8;
+	}
+	.sender{
+		font-weight: bold;
+		max-width: 100px;
+	}
+	.message{
+		max-width: 467px;
+	}
+	.system_information{
+		font-weight: bold;
+		font-style: italic;
+		font-size: 14px;
+		color: #FC6C76;
+	}
+	</style>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+	</script>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<div id="personal">
+		<div class="style-2">
+			<input type="text" id="name_input" placeholder="Nick Name"/>
+			<input type="text" id="room_name" placeholder="Room Name"/>
+			<input type="text" id="room_password" placeholder="Pass Word"/>
+			<button id="create_room">Create</button>
+		</div>
+	</div>
+	<table id="wrapper_table">
+		<tr>
+			<td>
+				<div id="public_wrapper">
+					<div class="title_wrapper">
+						<div id="public_title">
+							public room name
+						</div>
+					</div>
+					<div class="chat_log">
+						<div id="public_chat_log">
+							<table id="public_table">	
+								<tr>
+									<td class="sender">
+										Sender:
+										<hr>
+									</td>
+									<td class="message">
+										WelCome to Char Room
+										<hr>
+									</td>
+								</tr>
+								<tr>
+									<td class="system_information">
+										WARNING!
+										<hr>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id="chat_input">
+						<input type="text" id="public_input_field">
+						<button id="public_input_button">Shot</button>
+					</div>
+				</div>
+				<div id="private_wrapper">
+					<div class="title_wrapper">
+						<div id="private_title">
+							private room name
+						</div>
+					</div>
+					<div class="chat_log">
+						<div id="private_chat_log">
+							<table id="private_table">	
+								<tr>
+									<td class="sender">
+										Sender:
+										<hr>
+									</td>
+									<td class="message">
+										Welcome to Chat Room
+										<hr>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id="chat_input">
+						<input type="text" id="private_input_field">
+						<button id="private_input_button">Shot</button>
+					</div>
+				</div>
+			</td>
+			<td>
+				<div id="users_wrapper">
+					<div class="title_wrapper">
+						<div id="users_title">
+							Users List
+						</div>
+					</div>
+					<div class="entry">
+						<div id="users_entry">
+							<div class="cell">
+								Sender
+								<hr>
+								<button>chat</button>
+								<button>kick</button>
+								<button>ban</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</td>
+			<td>
+				<div id="rooms_wrapper">
+					<div class="title_wrapper">
+						<div id="rooms_title">
+							Rooms List
+						</div>
+					</div>
+					<div class="entry">
+						<div id="rooms_entry">
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+
+<script type ="text/javascript">
+var socketio = io.connect();
+var roomList;
+var priRoomList;
+
+$roomEntry = $('#rooms_entry');
+$userEntry = $('#users_entry');
+
+$public_title = $('#public_title');
+$publicLog = $('#public_chat_log');
+$private_title = $('#private_title');
+$privateLog = $('#private_chat_log');
+
+$room_name = $('#room_name');
+$room_password = $('#room_password');
+$name_input = $('#name_input');
+
+$publicTable = $('#public_table');
+
+$publicShot = $('#public_input_button');
+$privateShot = $('#private_input_button');
+
+$publicInput = $('#public_input_field');
+$privateInput = $('#private_input_field');
+
+$create_room = $('[id="create_room"]');
+
+var currentRoomName;
+var currentNameInRoom;
+var currentPrivateName;
+var isAdmin = false;
+
+//ATTENTION
+//1. DO NOT USE SPACE IN NAMING
+//2. DO NOT USE NAME SAME WITH MY HTML TAG ID
+
+//###TO DO LIST
+//2. private socket
+
+
+//on connection get all rooms and display
+function updateRooms(){
+	socketio.emit("get_roomlist");
+	
+}
+updateRooms();
+
+socketio.on('get_roomlist_result',function(data){
+	roomList = data['roomlist'];
+	priRoomList = data['privatelist'];
+	$roomEntry.empty();
+	for (var i in roomList){
+		var room = roomList[i];
+		if(priRoomList[room]){
+			$roomEntry.append('<div class="cell" id="'+room+'">'+room+'<hr><input type="text" id="password_'+room+'" /></div>');
+			priRoomClickEventBinding(room);
+		}
+		else{
+			$roomEntry.append('<div class="cell" id="'+room+'">'+room+'<hr></div>');
+			roomClickEventBinding(room);
+		}
+	}
+});
+
+//join room function
+function joinRoom(username,roomname,password){
+	if(/^[\w\s]+$/.test(username)){
+		data= {username:username, roomname:roomname,password:password};
+		socketio.emit('join_room',data);
+	}
+	else{
+		alert("Invalid username");
+	}
+}
+
+//click event binding
+function roomClickEventBinding(room){
+	$('[id="'+room+'"]').click(function(){
+		var username = $name_input[0].value;
+		joinRoom(username,this.id,"");
+	});
+}
+function priRoomClickEventBinding(room){
+	$('[id="'+room+'"]').click(function(){
+		var password = $('[id="password_'+this.id+'"]')[0].value;
+		if(password != ""){
+			var username = $name_input[0].value;
+			joinRoom(username,this.id,password);	
+		}
+	});
+}
+
+
+//private room created
+function privateRoomCreated(user){
+	$privateLog.append('<div id="private_log_'+user+'"><table id="private_table_'+user+'"></div>');
+	$privateLog.find('[id="private_log_'+user+'"]').hide();
+}
+
+//private room deleted
+function privateRoomDeleted(user){
+	$privateLog.find('[id="private_log_'+user+'"]').remove();
+	if($private_title.text() == user){
+		$private_title.empty();
+		currentPrivateName = "";
+		$private_title.append("Please select a user");
+	}	
+}
+
+function colorBinding(){
+	if(isAdmin){
+		$('[id="'+currentNameInRoom+'"]').css("color","#FF7400");	
+	}
+	else{
+		$('[id="'+currentNameInRoom+'"]').css("color","#8903B9");	
+	}
+}
+
+//update userlist
+function updateUserList(data){
+	var userlist = data['userlist'];
+	$userEntry.empty();
+	for(var i in userlist){
+		var user = userlist[i];
+		$userEntry.append('<div class="cell" id="'+user+'">'+user+'<hr><button id="'+user+'chat" value="'+user+'">chat</button><button id="'+user+'kick" value="'+user+'">kick</button><button id="'+user+'ban" value="'+user+'">ban</button></div>');
+		userClickEventBinding(user);
+
+		privateRoomCreated(user);
+	}
+	colorBinding();
+}
+
+//user successfully join a room, should update all the list
+socketio.on('update_user_list',function(data){
+	updateUserList(data);
+});
+
+//refresh the public chat room
+function refreshPublic(roomname){
+	//change last room name
+	currentRoomName = roomname;
+	//change the public room title
+	$public_title.empty();
+	$public_title.append(roomname);
+	//empty the public chat log
+	$publicTable.empty();
+}
+
+//join room result socket listen
+socketio.on('join_room_result',function(data){
+	if(!data['success']){
+		alert(data['message']);
+	}
+	else{
+		//leave old room
+		//use the currentnameinroom to leave
+		if (typeof currentRoomName != "undefined" && currentRoomName != ""){
+			socketio.emit('leave_room',{roomname:currentRoomName, username:currentNameInRoom});
+		}
+		
+		//become not admin
+		isAdmin = false;
+
+		//empty the private log
+		$privateLog.empty();
+
+		//update currentName in Room
+		currentNameInRoom = data['username'];
+		//colorBinding();
+		
+		//update users and chatlog
+		refreshPublic(data['roomname']);
+	}
+});
+
+//socket listen the user leaving result
+socketio.on('leave_room_result',function(data){
+	if(!data['success']){
+		alert("Error in leaving room");
+	}
+});
+
+//socket listen the user leaving room
+socketio.on('user_left_from_room',function(data){
+	var user = data['username'];
+	$('[id="users_entry"] [id="'+user+'"]').remove();
+	$publicTable.prepend('<tr><td class="system_information">'+user+' left this room. <hr></td></tr>');
+	privateRoomDeleted(user);
+});
+
+//new user added in room socket listen
+socketio.on('user_added_to_room',function(data){
+	var user = data['username'];
+	if(user != currentNameInRoom){
+		$userEntry.append('<div class="cell" id="'+user+'">'+user+'<hr><button id="'+user+'chat" value="'+user+'">chat</button><button id="'+user+'kick" value="'+user+'">kick</button><button id="'+user+'ban" value="'+user+'">ban</button></div>');
+		userClickEventBinding(user);
+		$publicTable.prepend('<tr><td class="system_information">'+user+' join this room. <hr></td></tr>');
+
+		//create private room log
+		privateRoomCreated(user);
+	}
+});
+
+//user button click event handling
+function userClickEventBinding(user){
+	// $('#'+user).click(function(){
+		//alert(this.id)
+	// });
+
+	//need to finished the function here
+	$('[id="'+user+'chat"]').click(function(){
+		if(this.value != currentPrivateName){
+			$('[id="'+this.value+'"]').css("color","black");
+			$privateLog.children().hide();
+			$privateLog.find('[id="private_log_'+user+'"]').show();
+			currentPrivateName = this.value;
+			$private_title.empty();
+			$private_title.append(this.value);
+		}
+		else{
+			alert("you are already chatting with him/her");
+		}
+	});
+	$('[id="'+user+'kick"]').click(function(){
+		//alert(this.value);
+		if(isAdmin){
+			if(this.value != currentNameInRoom){
+				socketio.emit('leave_room',{roomname:currentRoomName,username:this.value});	
+			}
+			else{
+				alert("You can't kick yourself.");
+			}
+		}else{
+			alert("You are not an admin!");
+		}
+	});
+	$('[id="'+user+'ban"]').click(function(){
+		//alert(this.value);
+		if(isAdmin){
+			if(this.value != currentNameInRoom){
+				socketio.emit('ban_user',{roomname:currentRoomName,username:this.value});
+			}
+			else{
+				alert("You can't ban yourself");
+			}
+		}else{
+			alert("You are not an admin!");
+		}
+	});
+}
+
+//new room socket listen
+socketio.on('new_room_created',function(data){
+	var room = data['roomname'];
+	if(data['isprivate']){
+		$roomEntry.append('<div class="cell" id="'+room+'">'+room+'<hr><input type="text" id="password_'+room+'" /></div>');
+		priRoomClickEventBinding(room);
+	}
+	else{
+		$roomEntry.append('<div class="cell" id="'+room+'">'+room+'<hr></div>');
+		roomClickEventBinding(room);
+	}
+});
+
+//delete room socket listen
+socketio.on('remove_room_from_list',function(data){
+	$('[id="rooms_entry"] [id="'+data['roomname']+'"]').remove();
+});
+
+//if the user try to create a room
+$create_room.click(function(){
+	//try to get the username and password
+	var roomname = $room_name[0].value;
+	var password = $room_password[0].value;
+	var username = $name_input[0].value;
+	if(/^[\d\w]*$/.test(password) && /^[\w\d\s]+$/.test(roomname)){
+		if(/^[\w\s]+$/.test(username)){
+			data = {roomname:roomname, adminname:username, password:password};
+			socketio.emit("create_room",data);
+			$room_name[0].value = "";
+			$room_password[0].value = "";
+		}
+		else{
+			alert("Invalid username");
+		}
+	}
+	else{
+		alert("Invalid roomname or password!");
+	}
+});
+
+//then waiting the result
+socketio.on('create_room_result',function(data){
+	//if success
+	if(data['success']){
+		isAdmin = true;
+
+		//should leave
+		if (typeof currentRoomName != "undefined"){
+			socketio.emit('leave_room',{roomname:currentRoomName, username:currentNameInRoom});
+		}
+
+		//empty the private log
+		$privateLog.empty();
+
+		//should join room here
+		currentNameInRoom = data['username'];
+		//colorBinding();
+		refreshPublic(data['roomname']);
+	}
+	else{
+		//if fail
+		alert(data['message']);	
+	}
+});
+
+socketio.on('public_message_to_client',function(data){
+	$publicTable.prepend('<tr><td class="sender">'+data['sender']+': <hr></td><td class="message">'+data['message']+'<hr></td></tr>');
+});
+
+socketio.on('private_message_to_client',function(data){
+	var sender = data['sender'];
+	var message = data['message'];
+
+	$('[id="private_table_'+sender+'"]').prepend('<tr><td class="sender">'+data['sender']+': <hr></td><td class="message">'+data['message']+'<hr></td></tr>');
+
+	if(currentPrivateName!=sender){
+		$('[id="'+sender+'"]').css("color","#EF3E67");
+	}
+});
+
+$publicShot.click(function(){
+	if(typeof currentRoomName == "undefined"){
+		alert("Please enter a room before shot!");
+		return;
+	}
+
+	var username = $name_input[0].value;
+	var input = $publicInput[0].value;
+	socketio.emit('public_message_to_server',{message:input,sender:username,roomname:currentRoomName});
+	$publicInput[0].value = "";
+});
+
+$privateShot.click(function(){
+	if(typeof currentPrivateName == "undefined"){
+		alert("Please select a person before shot!");
+		return;
+	}
+
+	var receiver = currentPrivateName;
+	var message = $privateInput[0].value;
+	var sender = currentNameInRoom;
+	var roomname = currentRoomName;
+	$('[id="private_table_'+receiver+'"]').prepend('<tr><td class="sender">'+sender+': <hr></td><td class="message">'+message+'<hr></td></tr>');
+
+	socketio.emit('private_message_to_server',{message:message,sender:sender,roomname:roomname,receiver:receiver});
+	$privateInput[0].value = "";
+});
+
+//admin status change
+socketio.on('admin_status',function(data){
+	var adName = data['admin'];
+	$('[id="'+adName+'"]').css("color","#FF7400");
+	if(adName == currentNameInRoom){
+		isAdmin = true;
+	}
+});
+
+function getKicked(){
+	currentRoomName = "";
+	currentNameInRoom = "";
+	currentPrivateName = "";
+	$publicTable.empty();
+	$public_title.empty();
+	$private_title.empty();
+	$privateLog.empty();
+	$userEntry.empty();
+}
+
+//kick listen
+socketio.on('kick_message',function(data){
+	getKicked();
+	alert("You've been kicked!");
+});
+
+//ban user result listen
+socketio.on('ban_user_result',function(data){
+	alert(data['message']);
+});
+
+//ban message listen
+socketio.on('ban_message',function(data){
+	getKicked();
+	alert(data['message']);
+});
+
+//private keyup emit
+$privateInput.keyup(function(){
+	var receiver = currentPrivateName;
+	var sender = currentNameInRoom;
+	var roomname = currentRoomName;
+	socketio.emit('keyup_to_client',{sender:sender,roomname:roomname,receiver:receiver});
+});
+
+//private keyup on
+socketio.on('keyup_from_server',function(data){
+	if(currentPrivateName == data['sender']){
+		$private_title.empty();
+		$private_title.append(currentPrivateName);
+	}
+});
+
+//private keyup emit
+$privateInput.keydown(function(){
+	var receiver = currentPrivateName;
+	var sender = currentNameInRoom;
+	var roomname = currentRoomName;
+	socketio.emit('keydown_from_client',{sender:sender,roomname:roomname,receiver:receiver});
+});
+
+//private keyup on
+socketio.on('keydown_from_server',function(data){
+	if(currentPrivateName == data['sender']){
+		$private_title.empty();
+		$private_title.append(currentPrivateName+" is typing");
+	}
+});
+
+</script>
+</html>

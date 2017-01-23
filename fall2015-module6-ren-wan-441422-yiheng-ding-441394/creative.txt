@@ -1,0 +1,4 @@
+1.The coloring, the admin of a room is presented as a gold name, the current user name is marked as purple. the person with red is the person with unread message
+2.if a user left or join a room, a system message will show up to inform everyone in this room
+3.we have disconnection detection, if some user refresh the page or close the browser, the chat room will automatically disconnect him.
+4.user typing will be showed.
