@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <!--Body content-->
+  <table>
+    <tr>
+        <th>Reviews:</th>
+        <th>Brand:</th>
+        <th>Coffee Title:</th>
+        <th>Country:</th>
+    </tr>
+    <tr ng-repeat="coffee in coffees | filter:query | orderBy:'name'" ng-class-odd="'odd'" ng-class-even="'even'">
+      <td><a ng-click="setid(coffee.id)" href="#/reviews">Reviews</a></td>
+      <td>{{coffee.brand}}</td>
+      <td>{{coffee.name}}</td>
+      <td>{{coffee.country}}</td>
+    </tr>
+  </table>
+</div>

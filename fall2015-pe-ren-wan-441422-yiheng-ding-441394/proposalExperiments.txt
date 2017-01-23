@@ -1,0 +1,8 @@
+# We are going to conduct two experiments:
+1. Node.js and Apache+PHP comparison on the same AWS instance type
+Tools: Apache Bench
+
+2. MongoDB and MySQL performance comparison on the sam AWS instance type
+Tools:
+* MySQL: SysBench
+* MongoDB: SysBench, YCSB or Mongoperf

@@ -1,0 +1,19 @@
+<div class="wrapper">
+    <h3>Reviews for We Did Our Best Latte: {{coffees[ID-1].brand}}</h3>
+    <table>
+        <tr>
+            <th>Reviewer:</th>
+            <th>Comment:</th>
+            <th>Rating:</th>
+        </tr>
+        <tr ng-repeat="review in coffees[ID-1].reviews | filter:query" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td>{{review.reviewer}}</td>
+            <td class="comment">{{review.comment}}</td>
+            <td>
+                <uib-rating ng-model=review.rating max="10" readonly="true" aria-labelledby="default-rating"></uib-rating>
+                <span class="label" ng-class="{'label-warning': review.rating * 10<30, 'label-info': review.rating * 10>=30 && review.rating * 10<70, 'label-success': review.rating * 10>=70}">{{review.rating * 10}}%</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
